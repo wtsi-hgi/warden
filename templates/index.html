@@ -7,19 +7,19 @@
 		<input type="text" id="filterInput" onkeyup="filter()"
 			placeholder="Search group names...">
 		<table id="groupTable">
-			{% for group in groups %}
+			{% for group in groups.values() %}
 				<tr>
 					<td><h3>{{ group.group_name }}</h3></td>
-					<td>Estimated build time:  {{ group.build_time }} <br>
+					<td>Estimated build time: {{ group.build_time }} <br>
 					Status: {{ group.status }}</td>
 					{% if group.status == "up" %}
-						<td><button type="button" onclick="destroyInstance('{{ group.group_name }}')">[Destroy]</button><br>
+						<td><button type="button" onclick="destroyInstance('{{ group.group_name }}')">Destroy</button><br>
 						Prune time: {{ group.prune_time }} <br>
 						Created: {{ group.creation_time }}</td>
 					{% elif group.status == "down" %}
-						<td><button type="button" onclick="startInstance('{{ group.group_name }}')">[Launch]</button></td>
+						<td><button type="button" onclick="startInstance('{{ group.group_name }}')">Launch</button></td>
 					{% elif group.status == "building" %}
-						<td><button type="button" onclick="destroyInstance('{{ group.group_name }}')">[Cancel]</button></td>
+						<td><button type="button" onclick="destroyInstance('{{ group.group_name }}')">Cancel</button></td>
 					{% endif %}
 				</tr>
 			{% endfor %}
