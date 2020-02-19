@@ -81,6 +81,8 @@ function updateGroupTable() {
                 if (Object.keys(groups).includes(name)) {
                     if (groups[name]["status"] === "up") {
                         modifyUpRowContents(groups[name], rows[i]);
+                    } else if (groups[name]["status"] === "building"){
+                        modifyUpRowContents(groups[name], rows[i])
                     } else if (groups[name]["status"] === "down") {
                         modifyDownRowContents(groups[name], rows[i]);
                     }
