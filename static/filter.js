@@ -40,9 +40,17 @@ function modifyUpRowContents(groups, row) {
     text.innerHTML = "Prune time: " + groups['prune_time'] + "<br>Created: "
     + groups['creation_time'];
 
+    let link = document.createElement('div');
+    if (groups['status'] === "up") {
+        link.innerHTML = '<a href="/view/' + groups['group_name'] + '/index.html" target="_blank" rel="noopener noreferrer">View Lustretree</a>'
+    }
+
     row.cells[2].textContent = "";
     row.cells[2].appendChild(button);
     row.cells[2].appendChild(text);
+    if (groups['status'] === "up") {
+        row.cells[2].appendChild(link)
+    }
 }
 
 function modifyDownRowContents(groups, row) {
