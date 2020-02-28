@@ -1,3 +1,5 @@
+let stamp = -1;
+
 function filter() {
     let input = document.getElementById("filterInput");
     let filter = input.value.toLowerCase();
@@ -68,19 +70,19 @@ function modifyDownRowContents(groups, row) {
 }
 
 function updateGroupTable() {
-    fetch('/update')
+    fetch('/update?stamp='.concat('', stamp))
         .then(function(response) {
             return response.json();
         })
         .then(function(result) {
-            let groups = result;
-            let table = document.getElementById("groupTable");
-            let rows = table.rows;
-
-            if (groups === "OK") {
-                // database hasn't changed, no need to update
+            if (result === "OK") {
                 return false;
             }
+
+            stamp = result['stamp'];
+            let groups = result['groups']
+            let table = document.getElementById("groupTable");
+            let rows = table.rows;
 
             for (let i = 0; i < rows.length; i++) {
                 let name_cell = rows[i].cells[0];
@@ -99,4 +101,4 @@ function updateGroupTable() {
         });
 }
 
-setInterval(updateGroupTable, 1000);
+setInterval(updateGroupTable, 2000);

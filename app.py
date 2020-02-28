@@ -6,17 +6,11 @@ import flask
 
 app = flask.Flask(__name__)
 
-# timestamp of when Warden last checked Arboretum's modification time
-LAST_CHECKED = datetime.datetime.min
 # group:IP mapping for active instances
 ACTIVE_INSTANCES = {}
 
 @app.route('/')
 def index():
-    # forces an update as soon as the page is opened
-    global LAST_CHECKED
-    LAST_CHECKED = datetime.datetime.min
-
     req = urllib.request.urlopen("http://localhost:8000/groups")
 
     groups = json.loads(req.read())
@@ -39,15 +33,16 @@ def destroyInstance(group):
 
 @app.route('/update')
 def getGroupTable():
+    js_stamp = flask.request.args.get('stamp')
     req = urllib.request.urlopen("http://localhost:8000/lastmodified")
 
-    result = json.loads(req.read())
-    last_modified = datetime.datetime.strptime(result, "%Y-%m-%d %H:%M:%S")
+    arboretum_stamp = json.loads(req.read())
 
-    global LAST_CHECKED
-    if last_modified > LAST_CHECKED:
+    if js_stamp != arboretum_stamp:
         req = urllib.request.urlopen("http://localhost:8000/groups")
         groups = json.loads(req.read())
+
+        response = {'stamp': arboretum_stamp, 'groups': groups}
 
         global ACTIVE_INSTANCES
         ACTIVE_INSTANCES = {}
@@ -55,8 +50,7 @@ def getGroupTable():
             if group['status'] == "up":
                 ACTIVE_INSTANCES[name] = group['instance_ip']
 
-        LAST_CHECKED = datetime.datetime.now()
-        return groups
+        return response
     else:
         # double quoted to be valid json (which this function is expected to
         # return)
