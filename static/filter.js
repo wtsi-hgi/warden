@@ -21,11 +21,13 @@ function filter() {
 }
 
 function startInstance(group) {
-    fetch('/create/'.concat('', group));
+    fetch('/treeserve/create/'.concat('', group),
+        {method: 'POST'});
 }
 
 function destroyInstance(group) {
-    fetch('/destroy/'.concat('', group));
+    fetch('/treeserve/destroy/'.concat('', group),
+        {method: 'POST'});
 }
 
 function modifyUpRowContents(groups, row) {
@@ -44,7 +46,7 @@ function modifyUpRowContents(groups, row) {
 
     let link = document.createElement('div');
     if (groups['status'] === "up") {
-        link.innerHTML = '<a href="/view/' + groups['group_name'] + '/index.html" target="_blank" rel="noopener noreferrer">View Lustretree</a>'
+        link.innerHTML = '<a href="/treeserve/view/' + groups['group_name'] + '/index.html" target="_blank" rel="noopener noreferrer">View Lustretree</a>'
     }
 
     row.cells[2].textContent = "";
@@ -70,7 +72,7 @@ function modifyDownRowContents(groups, row) {
 }
 
 function updateGroupTable() {
-    fetch('/update?stamp='.concat('', stamp))
+    fetch('/treeserve/update?stamp='.concat('', stamp))
         .then(function(response) {
             return response.json();
         })
