@@ -103,4 +103,15 @@ function updateGroupTable() {
         });
 }
 
+fetch('/treeserve/status')
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(result) {
+        if (result != "up") {
+            let warning = document.getElementById("warning");
+            warning.style.visibility = "visible";
+        }
+    })
+
 setInterval(updateGroupTable, 2000);

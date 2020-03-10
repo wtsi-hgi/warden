@@ -3,6 +3,7 @@ import urllib.request
 import datetime
 import base64
 import ldap
+import socket
 
 import flask
 
@@ -15,6 +16,9 @@ def isUserHumgen():
     auth = flask.request.cookies.get('nginxauth')
     # base64 -> byte string -> Python string
     username = base64.b64decode(auth).decode('UTF-8').split(':')[0]
+
+    if username == None or username == "":
+        return False
 
     conn = ldap.initialize("ldap://ldap-ro.internal.sanger.ac.uk:389")
     conn.bind('','')
@@ -65,6 +69,34 @@ def destroyInstance(group):
         .format(group))
 
     return 'OK'
+
+@app.route('/treeserve/status')
+def checkArboretumStatus():
+    """Checks whether the Arboretum daemon is active, which is required for
+    Warden to function."""
+    # The Arboretum daemon is expected to have an open socket on localhost
+    # at port 4510. As of the time of writing, 127.0.0.1:4510 is hardcoded
+    # into the daemon, so that's what we'll query.
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        try:
+            sock.connect(('127.0.0.1', 4510))
+        except ConnectionRefusedError:
+            return '"down"'
+
+        sock.send(b'status')
+        # Response is in the form "subdaemon=status" ie, "prune_process=up"
+        # where each entry is separated by a space
+        data = sock.recv(1024).decode("UTF-8")
+        statuses = data.split()
+        problems = {}
+
+        for item in statuses:
+            name, status = item.split("=")
+            if status != "up":
+                return '"partial"'
+
+        return '"up"'
 
 @app.route('/treeserve/update')
 def getGroupTable():

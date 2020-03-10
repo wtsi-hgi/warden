@@ -1,8 +1,15 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>{{ arboretum }}</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 	</head>
 	<body>
+		<div id="warning"><p>
+			Warning! Something's broken, and this page is currently not	functioning
+			properly! Please notify	fm12@sanger.ac.uk or another member of HGI to
+			resolve the issue.
+		</p></div>
 		<h2>Groups</h2>
 		<input type="text" id="filterInput" onkeyup="filter()"
 			placeholder="Search group names...">
