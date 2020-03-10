@@ -13,9 +13,7 @@ app = flask.Flask(__name__, static_url_path="/treeserve/static")
 ACTIVE_INSTANCES = {}
 
 def isUserHumgen():
-    auth = flask.request.cookies.get('nginxauth')
-    # base64 -> byte string -> Python string
-    username = base64.b64decode(auth).decode('UTF-8').split(':')[0]
+    username = flask.request.headers['X-Forwarded-User']
 
     if username == None or username == "":
         return False
@@ -38,6 +36,13 @@ def isUserHumgen():
 def index():
     if not isUserHumgen():
         return 'Sorry, Human Genetics faculty only.'
+
+    try:
+        print("New request:\nUser: {}\nUser Agent: {}"
+            .format(flask.request.headers["X-Forwarded-User"],
+                flask.request.headers["User-Agent"]))
+    except KeyError:
+        print("New request: Malformed request header!")
 
     req = urllib.request.urlopen("http://localhost:8000/groups")
 
