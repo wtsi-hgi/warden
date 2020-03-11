@@ -2,6 +2,8 @@
 <html>
 	<head>
 		<title>{{ arboretum }}</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 		<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 	</head>
 	<body>
@@ -11,16 +13,16 @@
 			resolve the issue.
 		</p></div>
 		<h2>Groups</h2>
-		<input type="text" id="filterInput" onkeyup="filter()"
+		<input type="text" class="form-control input" id="filterInput" onkeyup="filter()"
 			placeholder="Search group names...">
-		<table id="groupTable">
+		<table class="table table-sm" id="groupTable">
 			{% for group in groups.values() %}
 				<tr>
-					<td><h3>{{ group.group_name }}</h3></td>
+					<td><h5>{{ group.group_name }}</h5></td>
 					<td>Estimated build time: {{ group.build_time }} <br>
 					Status: {{ group.status }}</td>
 					{% if group.status == "up" or group.status == "building" %}
-						<td><button type="button" onclick="destroyInstance('{{ group.group_name }}')">Destroy</button><br>
+						<td><button type="button" class="btn btn-primary" onclick="destroyInstance('{{ group.group_name }}')">Destroy</button><br>
 						Prune time: {{ group.prune_time }} <br>
 						Created: {{ group.creation_time }} <br>
 						{% if group.status == "up" %}
@@ -28,7 +30,7 @@
 						{% endif %}
 						</td>
 					{% elif group.status == "down" %}
-						<td><button type="button" onclick="startInstance('{{ group.group_name }}')">Launch</button></td>
+						<td><button type="button" class="btn btn-primary" onclick="startInstance('{{ group.group_name }}')">Launch</button></td>
 					{% endif %}
 				</tr>
 			{% endfor %}

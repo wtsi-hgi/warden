@@ -36,6 +36,7 @@ function modifyUpRowContents(groups, row) {
 
     let button = document.createElement('button');
     button.setAttribute('type', 'button');
+    button.setAttribute('class', 'btn btn-primary')
     button.setAttribute('onclick', "destroyInstance(\""
     + groups['group_name'] + "\")");
     button.textContent = "Destroy";
@@ -63,6 +64,7 @@ function modifyDownRowContents(groups, row) {
 
     let button = document.createElement('button');
     button.setAttribute('type', 'button');
+    button.setAttribute('class', 'btn btn-primary')
     button.setAttribute('onclick', "startInstance(\""
     + groups['group_name'] + "\")");
     button.textContent = "Launch";

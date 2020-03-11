@@ -13,7 +13,10 @@ app = flask.Flask(__name__, static_url_path="/treeserve/static")
 ACTIVE_INSTANCES = {}
 
 def isUserHumgen():
-    username = flask.request.headers['X-Forwarded-User']
+    try:
+        username = flask.request.headers['X-Forwarded-User']
+    except KeyError:
+        return False
 
     if username == None or username == "":
         return False
