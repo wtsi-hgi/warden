@@ -8,6 +8,7 @@ Warden is a web-based frontend used to interact with [Arboretum](https://github.
 Python libraries:
  - `Flask`
  - `gunicorn`
+ - `python-ldap`
 
 ### Quick start guide
 Warden won't work unless the Arboretum API is running on `localhost:8000`. 
