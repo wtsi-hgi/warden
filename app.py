@@ -41,11 +41,13 @@ def index():
         return 'Sorry, Human Genetics faculty only.'
 
     try:
-        print("New request:\nUser: {}\nUser Agent: {}"
-            .format(flask.request.headers["X-Forwarded-User"],
+        print("[{:%Y-%m-%d %H:%M:%S}] New request:\nUser: {}\nUser Agent: {}"
+            .format(datetime.datetime.now(),
+                flask.request.headers["X-Forwarded-User"],
                 flask.request.headers["User-Agent"]))
     except KeyError:
-        print("New request: Malformed request header!")
+        print("[{:%Y-%m-%d %H:%M:%S}] New request: Malformed request header!"
+            .format(datetime.datetime.now()))
 
     req = urllib.request.urlopen("http://localhost:8000/groups")
 
