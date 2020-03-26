@@ -139,11 +139,13 @@ def proxy(group, path):
     if not isUserHumgen():
         return 'Sorry, Human Genetics faculty only.'
 
-    global ACTIVE_INSTANCES
-    if group not in ACTIVE_INSTANCES.keys():
+    req = urllib.request.urlopen("http://localhost:8000/activegroups")
+    active = json.loads(req.read())
+
+    if group not in active.keys():
         return 'NOT ACTIVE'
     else:
-        group_ip = ACTIVE_INSTANCES[group]
+        group_ip = active[group]
 
     group_url = "http://{}/{}".format(group_ip, path)
 
