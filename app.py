@@ -145,7 +145,7 @@ def proxy(group, path):
     if group not in active.keys():
         return 'NOT ACTIVE'
     else:
-        group_ip = active[group]
+        group_ip = active[group]['instance_ip']
 
     group_url = "http://{}/{}".format(group_ip, path)
 
