@@ -30,7 +30,7 @@ def isUserHumgen():
     # extracts user's BoM area from the LDAP results object
     area = result[0][1]['sangerBomArea'][0].decode('UTF-8')
 
-    if area == "Human Genetics":
+    if area == "Human Genetics" or area == "Tree of Life Genomics":
         return True
     else:
         return False
@@ -38,10 +38,10 @@ def isUserHumgen():
 @app.route('/treeserve/')
 def index():
     if not isUserHumgen():
-        return 'Sorry, Human Genetics faculty only.'
+        return 'Sorry, Human Genetics/Tree of Life faculty only.'
 
     try:
-        print("[{:%Y-%m-%d %H:%M:%S}] New request:\nUser: {}\nUser Agent: {}"
+        print("[{:%Y-%m-%d %H:%M:%S}] New request:\n\tUser: {}\n\tUser Agent: {}"
             .format(datetime.datetime.now(),
                 flask.request.headers["X-Forwarded-User"],
                 flask.request.headers["User-Agent"]))
