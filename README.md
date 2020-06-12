@@ -1,6 +1,3 @@
-THIS PROGRAM IS NOT YET FULLY FUNCTIONAL
-========================================
-
 # Warden
 Warden is a web-based frontend used to interact with [Arboretum](https://github.com/wtsi-hgi/arboretum), allowing the user to see available groups and launch/destroy instances for them. 
 
