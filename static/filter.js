@@ -1,5 +1,8 @@
 let stamp = -1;
-
+/**
+ * Retrieves the groupTable and filter filterInput
+ * Hides cells that have no text in them (filtered out)
+ */
 function filter() {
     let input = document.getElementById("filterInput");
     let filter = input.value.toLowerCase();
@@ -19,17 +22,29 @@ function filter() {
         }
     }
 }
-
+/**
+ * Fetches URL '/treeserve/create/<group>'
+ * @Param group A UNIX group
+ */
 function startInstance(group) {
     fetch('/treeserve/create/'.concat('', group),
         {method: 'POST'});
 }
 
+/**
+ * Fetches URL '/treeserve/destroy/<group>'
+ * @Param group A UNIX group
+ */
 function destroyInstance(group) {
     fetch('/treeserve/destroy/'.concat('', group),
         {method: 'POST'});
 }
 
+/**
+ * Changes the layout for instances that are "Up"
+ * @Param groups A list of information about groups
+ * @Param row  A list columns in a row and their contents
+ */
 function modifyUpRowContents(groups, row) {
     row.cells[1].innerHTML = "Estimated build time: " + groups['build_time']
     + "<br>Status: " + groups['status'];
@@ -58,6 +73,11 @@ function modifyUpRowContents(groups, row) {
     }
 }
 
+/**
+ * Changes the layout for instances that are "Down"
+ * @Param groups A list of information about groups
+ * @Param row  A list columns in a row and their contents
+ */
 function modifyDownRowContents(groups, row) {
     row.cells[1].innerHTML = "Estimated build time: " + groups['build_time']
     + "<br>Status: " + groups['status'];
@@ -73,6 +93,9 @@ function modifyDownRowContents(groups, row) {
     row.cells[2].appendChild(button);
 }
 
+/**
+ * Modifies the group table dependent on status of the group
+ */
 function updateGroupTable() {
     fetch('/treeserve/update?stamp='.concat('', stamp))
         .then(function(response) {
