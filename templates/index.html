@@ -7,20 +7,27 @@
 		<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 	</head>
 	<body>
+		<!--Displayed if there is an error with Arboretum-->
 		<div id="warning"><p>
 			Warning! Something's broken, and this page is currently not	functioning
-			properly! Please notify	fm12@sanger.ac.uk or another member of HGI to
+			properly! Please notify	an12@sanger.ac.uk or another member of HGI to
 			resolve the issue.
 		</p></div>
 		<h2>Groups</h2>
+		<!--Filter search bar-->
 		<input type="text" class="form-control input" id="filterInput" onkeyup="filter()"
 			placeholder="Search group names...">
+		<!--Table showing list of groups and their attributes/states-->
 		<table class="table table-sm" id="groupTable">
 			{% for group in groups.values() %}
 				<tr>
+					<!--Column 1: Name of the group-->
 					<td><h5>{{ group.group_name }}</h5></td>
+					<!--Column 2: Buildtime and status of the instance-->
 					<td>Estimated build time: {{ group.build_time }} <br>
 					Status: {{ group.status }}</td>
+					<!--Column 3: If statement for determining the state of an instance
+							and displaying its relevant information-->
 					{% if group.status == "up" or group.status == "building" %}
 						<td><button type="button" class="btn btn-primary" onclick="destroyInstance('{{ group.group_name }}')">Destroy</button><br>
 						Prune time: {{ group.prune_time }} <br>
