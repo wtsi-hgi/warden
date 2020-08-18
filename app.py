@@ -13,6 +13,17 @@ app = flask.Flask(__name__, static_url_path="/treeserve/static")
 ACTIVE_INSTANCES = {}
 
 def isUserHumgen():
+    """
+    Determines whether the user is a member of the Human Genetics
+    or the Tree of Life Genomics department
+
+    Returns
+    -------
+    True
+        User is a member of the specified departments
+    False
+        User is not a member of the specified departments
+    """
     try:
         username = flask.request.headers['X-Forwarded-User']
     except KeyError:
@@ -37,6 +48,15 @@ def isUserHumgen():
 
 @app.route('/treeserve/')
 def index():
+    """
+    Builds and returns the page that a user is served when they
+    go to [IP Address]/treeserve/
+
+    Returns
+    -------
+    resp
+        index.html template and fed group list
+    """
     if not isUserHumgen():
         return 'Sorry, Human Genetics/Tree of Life faculty only.'
 
@@ -54,7 +74,7 @@ def index():
     groups = json.loads(req.read())
 
     resp = flask.make_response(
-        flask.render_template('index.html', groups=groups))
+        flask.render_template('index.html', groups=groups, arboretum='Arboretum'))
     # cookie stops POST requests from doing anything unless the user visits
     # the root page first
     resp.set_cookie('warden_active_session', 'humgen')
@@ -62,6 +82,14 @@ def index():
 
 @app.route('/treeserve/create/<group>', methods = ['POST'])
 def createInstance(group):
+    """
+    Creates a treeserve instance
+
+    Parameters
+    ----------
+    group
+        Name of the UNIX group to start an instance for
+    """
     if not flask.request.cookies.get('warden_active_session'):
         return 'This URL should not be accessed directly.'
 
@@ -72,6 +100,14 @@ def createInstance(group):
 
 @app.route('/treeserve/destroy/<group>', methods = ['POST'])
 def destroyInstance(group):
+    """
+    Destroys a treeserve instance
+
+    Parameters
+    ----------
+    group
+        Name of the UNIX group to start an instance for
+    """
     if not flask.request.cookies.get('warden_active_session'):
         return 'This URL should not be accessed directly.'
 
@@ -82,8 +118,10 @@ def destroyInstance(group):
 
 @app.route('/treeserve/status')
 def checkArboretumStatus():
-    """Checks whether the Arboretum daemon is active, which is required for
-    Warden to function."""
+    """
+    Checks whether the Arboretum daemon is active, which is required for
+    Warden to function
+    """
     # The Arboretum daemon is expected to have an open socket on localhost
     # at port 4510. As of the time of writing, 127.0.0.1:4510 is hardcoded
     # into the daemon, so that's what we'll query.
@@ -110,6 +148,14 @@ def checkArboretumStatus():
 
 @app.route('/treeserve/update')
 def getGroupTable():
+    """
+    Getter for group table
+
+    Returns
+    -------
+    response
+        Dictionary of the updated stamp and list of groups
+    """
     if not flask.request.cookies.get('warden_active_session'):
         return 'This URL should not be accessed directly.'
 
@@ -138,6 +184,21 @@ def getGroupTable():
 
 @app.route('/treeserve/view/<group>/<path:path>')
 def proxy(group, path):
+    """
+    Proxy for treeserve instance requests
+
+    Parameters
+    ----------
+    group
+        A UNIX group
+    path
+        A path subsequent to the group
+
+    Returns
+    -------
+    response
+        Flask response dependent on the request method
+    """
     if not isUserHumgen():
         return 'Sorry, Human Genetics faculty only.'
 
